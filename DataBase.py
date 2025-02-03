@@ -9,7 +9,10 @@ from telegram.error import TelegramError
 from decouple import config
 from telebot import types
 from FunctionsLibrary import *
+import time
+# import os
 
+# BOT_TOKEN = os.getenv("BOT_TOKEN")
 BOT_TOKEN = config("BOT_TOKEN")
 DullaniBot = telebot.TeleBot(BOT_TOKEN)
 MainDataBase = "data.json"
