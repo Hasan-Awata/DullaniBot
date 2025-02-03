@@ -11,11 +11,35 @@ from telebot import types
 from FunctionsLibrary import *
 import time
 # import os
+from flask import Flask, request
 
-# BOT_TOKEN = os.getenv("BOT_TOKEN")
+# Initialize Flask app
+app = Flask(__name__)
+
+# Get bot token from environment variables using decouple
 BOT_TOKEN = config("BOT_TOKEN")
+
+# Initialize DullaniBot with the token
 DullaniBot = telebot.TeleBot(BOT_TOKEN)
+
+# MainDataBase is for storing data, for example
 MainDataBase = "data.json"
+
+# Set the webhook URL (ensure it's correct for your PythonAnywhere app)
+webhook_url = "https://leonardoCrolla.pythonanywhere.com/webhook"
+
+# Remove any existing webhook and set the new one
+DullaniBot.remove_webhook()
+DullaniBot.set_webhook(url=webhook_url)
+
+# Set the webhook route to handle incoming updates from Telegram
+@app.route('/webhook', methods=['POST'])
+def webhook():
+    json_str = request.get_data().decode('UTF-8')  # Get the incoming request
+    update = telebot.types.Update.de_json(json_str)  # Convert the incoming data to an Update object
+    DullaniBot.process_new_updates([update])  # Process the update
+    return 'ok'  # Return a response to Telegram
+
 
 def Main_Khetma_Form(FileName, ChatID, KhetmaNumber):
    with open(FileName,'r') as JsonFile:
